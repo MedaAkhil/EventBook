@@ -1,0 +1,25 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title SignUp
+    //- link(rel="stylesheet", href="styles.css")  // If you have a separate CSS file
+
+  body
+    center
+        .container
+        h2 SignUp
+        p(style="color: red;")= error
+        form(action="/signup/emailverify", method="get")
+            label(for="fname") First Name:
+            input(type="text", id="fname", name="fname", required)
+            br
+            label(for="email") Email:
+            input(type="text", id="email", name="email", required)
+            br
+            label(for="password") Password:
+            input(type="password", id="password", name="password", required)
+            br
+            input(type="submit", value="SignUp")
+  
