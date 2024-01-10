@@ -10,7 +10,7 @@ html(lang="en")
     center
         .container
         h2 SignUp
-        p(style="color: red;") #{mes}
+        p(style="color: red;") #{msg}
         form(action="/signup/emailverify", method="get")
             label(for="fname") First Name:
             input(type="text", id="fname", name="fname", required)

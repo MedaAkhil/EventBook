@@ -27,7 +27,14 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 router.get('/signup', function(req, res, next) {
-  res.render('SignUp');
+  msg = req.query.msg;
+  if (msg){
+    console.log("from signup route msg",msg);
+    res.render('SignUp',{msg});
+  }else{
+    console.log("from signup route else",msg);
+    res.render('SignUp');
+  }
 });
 router.get('/signup/emailverify', function(req, res, next) {
   email = req.query.email;
@@ -38,24 +45,24 @@ router.get('/signup/emailverify', function(req, res, next) {
   let MailGenerator = new Mailgen({
     theme: "default",
     product : {
-        name: "Your Company name",
-        link : 'https://mailgen.js/'
+        name: "Event Book",
+        link : 'https://google.com'
     }
 })
 
 let response = {
     body: {
         name : "Event",
-        intro: "Your Response have been taken",
+        intro: "Your account creation have been initialized",
         table : {
             data : [
                 {
-                    item : "your OTP To Register",
+                    item : "your OTP To SignUp",
                     otp : otp,
                 }
             ]
         },
-        outro: "Looking forward to do more Events"
+        outro: "Explore more from EventBook"
     }
 }
 
@@ -83,9 +90,9 @@ router.post('/otp', (req,res) =>{
   if(otp == otpu){
     res.redirect('/');
   } else{
-    error = "InvalidOtp";
+    error = "Invalid Otp try again";
     // res.session['success']=error;
-    res.redirect(`/signup?mes=${error}`);
+    res.redirect(`/signup?msg=${error}`);
   }
 })
 
