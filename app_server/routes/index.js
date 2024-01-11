@@ -4,6 +4,7 @@ const Mailgen = require('mailgen');
 
 
 
+
 var router = express.Router();
 var email="";
 var otp=0;
@@ -18,13 +19,45 @@ let config = {
   },
   debug: true
 }
+const users = {
+  'user': {
+        username: 'a', 
+        password: 'a'    
+    } // Replace with your actual user data
+};
 /* GET home page. */
 function generateRandomNumber() {
   // Generate a random number between 100000 and 999999
   return Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
 }
+
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
+});
+router.get('/signin', (req, res) => {
+  res.render('SignIn');
+});
+router.post('/signin', (req, res) => {
+  const { username, password } = req.body;
+    console.log('reqbody var',username,password);
+  const user = users[username];
+    console.log('exinsting user',user);
+  if ('123456' == password) {
+    req.session.user = { username };
+    console.log('password correct');
+    res.redirect('/');
+  } else {
+    console.log('password incorrect');
+    res.redirect('/login');
+  }
+});
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+    }
+    res.redirect('/');
+  });
 });
 router.get('/signup', function(req, res, next) {
   msg = req.query.msg;
