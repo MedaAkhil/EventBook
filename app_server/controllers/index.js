@@ -7,23 +7,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 
-const showError = (req, res, status) => {
-  let title = '';
-  let content = '';
 
-  if (status === 404) {
-    title = '404, page not found';
-    content = 'Oh dear, Looks like we can\'t find this page. Sorry';
-  } else {
-    title = `${status}, something's gone wrong`;
-    content = 'Something, somewhere, has gone just a little bit wrong.';
-  }
-  res.status(status);
-  res.render('generic-text', {
-    title,
-    content
-  });
-};
 
 
 // login page controller functions
@@ -31,10 +15,12 @@ const renderLoginPage = (req, res, responseBody) => {
     res.render('index',{responseBody,message});
 };
   
-const loginPage = (req, res) => {
+const ctrlLogin = (req, res) => {
     renderLoginPage(req, res);
 };
-
+const ctrlLoginPost = (req,res) => {
+  
+}
 
 const renderHomepage = (req, res, responseBody) => {
     let message = null;
@@ -374,9 +360,25 @@ const doAddReview = (req, res) => {
     );
   }
 };
+const showError = (req, res, status) => {
+  let title = '';
+  let content = '';
 
+  if (status === 404) {
+    title = '404, page not found';
+    content = 'Oh dear, Looks like we can\'t find this page. Sorry';
+  } else {
+    title = `${status}, something's gone wrong`;
+    content = 'Something, somewhere, has gone just a little bit wrong.';
+  }
+  res.status(status);
+  res.render('generic-text', {
+    title,
+    content
+  });
+};
 module.exports = {
-    loginPage,
+  ctrlLogin,
   homePage,
   moviesPage,
   moviePage,

@@ -2,10 +2,31 @@ var express = require('express');
 const nodemailer = require('nodemailer');
 const Mailgen = require('mailgen');
 
-
+const ctrlInder = require('../controllers/index')
 
 
 var router = express.Router();
+
+
+router.route('/login').get(ctrlInder.ctrlLogin).post(ctrlInder.ctrlLoginPost);
+router.route('/signup').get(ctrlInder.ctrlSignUp).post(ctrlInder.ctrlSignUpPost);
+router.route('/').get(ctrlInder.homePage);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var email="";
 var otp=0;
 var error;
