@@ -18,8 +18,35 @@ const renderLoginPage = (req, res, responseBody) => {
 const ctrlLogin = (req, res) => {
     renderLoginPage(req, res);
 };
-const ctrlLoginPost = (req,res) => {
-  
+const ctrlLoginPost = async (req,res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if the username exists
+    const path = `/api/user/${email}`;
+    const requestOptions = {
+        url: `${apiOptions.server}${path}`,
+        method: 'GET',
+        json: {},
+    };
+    request(
+        requestOptions, async (err, {statusCode}, user) => {
+          if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+          }
+          const passwordMatch = await bcrypt.compare(password, user.password);
+          if (!passwordMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+          }
+          const token = jwt.sign({ username: user.username, userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
+          res.status(200).json({ token, userId: user._id });
+          renderHomepage(req, res, {mdata,wdata});
+        }
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
 const renderHomepage = (req, res, responseBody) => {
@@ -380,6 +407,7 @@ const showError = (req, res, status) => {
 module.exports = {
   ctrlLogin,
   homePage,
+  ctrlLoginPost,
   moviesPage,
   moviePage,
   webSeriesPage,
