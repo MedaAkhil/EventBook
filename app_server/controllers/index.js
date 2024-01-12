@@ -48,41 +48,49 @@ const ctrlLoginPost = async (req,res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
-
-const renderHomepage = (req, res, responseBody) => {
-    let message = null;
-    if (!(responseBody instanceof Array)) {
-        message = 'API lookup error';
-        responseBody = [];
-    } else {
-        if (!responseBody.length) {
-        message = 'No Movies found!';
-        }
-    }
-    res.render('index',{responseBody,message}
-    );
+const renderSignUpPage = (req, res, ) => {
+  res.render('SignUp');
 };
 
-const homePageweb = (req, res, {mdata}) => {
-    const path = '/api/webseries';
+const ctrlSignUp = (req, res) => {
+  renderSignUpPage(req, res);
+};
+const ctrlSignUpPost = async (req,res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if the username exists
+    const path = `/api/user/${email}`;
     const requestOptions = {
         url: `${apiOptions.server}${path}`,
         method: 'GET',
         json: {},
-        
     };
     request(
-        requestOptions,
-        (err, {statusCode}, body) => {
-        let data = [];
-        if (statusCode === 200 && body.length) {
-            wdata = body.map( (item) => {
-            return item;
-            });
-        }
-        renderHomepage(req, res, {mdata,wdata});
+        requestOptions, async (err, {statusCode}, user) => {
+          if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+          }
+          const passwordMatch = await bcrypt.compare(password, user.password);
+          if (!passwordMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+          }
+          const token = jwt.sign({ username: user.username, userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
+          res.status(200).json({ token, userId: user._id });
+          renderHomepage(req, res, {mdata,wdata});
         }
     );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+
+
+const renderHomepage = (req, res) => {
+  res.render('index');
 };
 
 const homePage = (req, res) => {
@@ -102,7 +110,7 @@ const homePage = (req, res) => {
             return item;
             });
         }
-        homePageweb(req, res, {mdata});
+        renderHomepage(req, res);
         }
     );
 };
@@ -408,6 +416,8 @@ module.exports = {
   ctrlLogin,
   homePage,
   ctrlLoginPost,
+  ctrlSignUpPost,
+  ctrlSignUp,
   moviesPage,
   moviePage,
   webSeriesPage,

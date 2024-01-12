@@ -52,26 +52,26 @@ function generateRandomNumber() {
   return Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
 }
 
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-router.get('/signin', (req, res) => {
-  res.render('SignIn');
-});
-router.post('/signin', (req, res) => {
-  const { username, password } = req.body;
-    console.log('reqbody var',username,password);
-  const user = users[username];
-    console.log('exinsting user',user);
-  if ('123456' == password) {
-    req.session.user = { username };
-    console.log('password correct');
-    res.redirect('/');
-  } else {
-    console.log('password incorrect');
-    res.redirect('/login');
-  }
-});
+// router.get('/', function(req, res, next) {
+//   res.render('index', { title: 'Express' });
+// });
+// router.get('/signin', (req, res) => {
+//   res.render('SignIn');
+// });
+// router.post('/signin', (req, res) => {
+//   const { username, password } = req.body;
+//     console.log('reqbody var',username,password);
+//   const user = users[username];
+//     console.log('exinsting user',user);
+//   if ('123456' == password) {
+//     req.session.user = { username };
+//     console.log('password correct');
+//     res.redirect('/');
+//   } else {
+//     console.log('password incorrect');
+//     res.redirect('/login');
+//   }
+// });
 router.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -80,16 +80,16 @@ router.get('/logout', (req, res) => {
     res.redirect('/');
   });
 });
-router.get('/signup', function(req, res, next) {
-  msg = req.query.msg;
-  if (msg){
-    console.log("from signup route msg",msg);
-    res.render('SignUp',{msg});
-  }else{
-    console.log("from signup route else",msg);
-    res.render('SignUp');
-  }
-});
+// router.get('/signup', function(req, res, next) {
+//   msg = req.query.msg;
+//   if (msg){
+//     console.log("from signup route msg",msg);
+//     res.render('SignUp',{msg});
+//   }else{
+//     console.log("from signup route else",msg);
+//     res.render('SignUp');
+//   }
+// });
 router.get('/signup/emailverify', function(req, res, next) {
   email = req.query.email;
   console.log("this is username",req.query.email);

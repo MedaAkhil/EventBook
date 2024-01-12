@@ -3,12 +3,8 @@ const readLine = require('readline');
 
 // const dbURI = "mongodb://127.0.0.1/witch"
 const dbURI = "mongodb+srv://Akhilaesh:ZGcUW2vs3R5hxPGJ@myatlasclusteredu.wv2czbn.mongodb.net/eventbook?retryWrites=true&w=majority"
-
-mongoose.connect(dbURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-
-});
+var message = 'MongoDB connected at:mongodb+srv://Akhilaesh:ZGcUW2vs3R5hxPGJ@myatlasclusteredu.wv2czbn.mongodb.net/eventbook?retryWrites=true&w=majority'
+mongoose.connect(dbURI);
 // var message = "mongodb+srv://Akhilaesh:ZGcUW2vs3R5hxPGJ@myatlasclusteredu.wv2czbn.mongodb.net/?retryWrites=true&w=majority"
 if (dbURI == "mongodb://127.0.0.1/witch"){
     message = 'MongoDB connected at:mongodb://127.0.0.1/eventbook'
