@@ -14,8 +14,8 @@ if (process.env.NODE_ENV === 'production') {
 
 
 // login page controller functions
-const renderLoginPage = (req, res, responseBody) => {
-    res.render('index',{responseBody,message});
+const renderLoginPage = (req, res) => {
+    res.render('index');
 };
   
 const ctrlLogin = (req, res) => {
@@ -74,9 +74,8 @@ const ctrlSignUpPost = async (req,res) => {
       requestOptions, async (err, {statusCode}, user) => {
         console.log("this is retrived from the db",user);
         if (user) {
-          return res.status(401).json({ message: "User Exists" });
+          return res.redirect('/signup?msg=Email Already Registered');
         }else{
-
           path = `/api/user?email=${email}&password=${password}`;
           requestOptions = {
             url: `${apiOptions.server}${path}`,
@@ -86,7 +85,7 @@ const ctrlSignUpPost = async (req,res) => {
           request(
             requestOptions, async (err, {statusCode}, user) => {
               if (user) {
-                return res.status(401).json({ message: 'User Created' });
+                return res.redirect('/login');
               }
             }
           );
