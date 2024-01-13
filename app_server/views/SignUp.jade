@@ -11,7 +11,7 @@ html(lang="en")
         .container
         h2 SignUp
         p(style="color: red;") #{msg}
-        form(action="/signup/emailverify", method="get")
+        form(action="/signup", method="POST")
             label(for="fname") First Name:
             input(type="text", id="fname", name="fname", required)
             br

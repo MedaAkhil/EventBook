@@ -1,4 +1,7 @@
 const request = require('request');
+const bcrypt = require('bcryptjs');
+
+
 const apiOptions = {
   server: 'http://localhost:3000'
 };
@@ -49,6 +52,7 @@ const ctrlLoginPost = async (req,res) => {
   }
 }
 const renderSignUpPage = (req, res, ) => {
+  console.log('signup page rendered from controllers');
   res.render('SignUp');
 };
 
@@ -58,26 +62,26 @@ const ctrlSignUp = (req, res) => {
 const ctrlSignUpPost = async (req,res) => {
   try {
     const { email, password } = req.body;
-
+    console.log('signup POST controller data received is',email,password);
     // Check if the username exists
-    const path = `/api/user/${email}`;
+    const path = `/api/user`;
     const requestOptions = {
-        url: `${apiOptions.server}${path}`,
-        method: 'GET',
-        json: {},
+      url: `${apiOptions.server}${path}`,
+      method: 'GET',
+      json: {},
     };
     request(
-        requestOptions, async (err, {statusCode}, user) => {
-          if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-          }
-          const passwordMatch = await bcrypt.compare(password, user.password);
-          if (!passwordMatch) {
+      requestOptions, async (err, {statusCode}, user) => {
+        if (!user) {
+          return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        console.log("from controllers bcrypt",password,user.password);
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
           }
           const token = jwt.sign({ username: user.username, userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
           res.status(200).json({ token, userId: user._id });
-          renderHomepage(req, res, {mdata,wdata});
         }
     );
   } catch (error) {
