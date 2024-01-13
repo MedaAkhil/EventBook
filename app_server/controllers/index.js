@@ -64,25 +64,34 @@ const ctrlSignUpPost = async (req,res) => {
     const { email, password } = req.body;
     console.log('signup POST controller data received is',email,password);
     // Check if the username exists
-    const path = `/api/user`;
-    const requestOptions = {
+    var path = `/api/user/${email}`;
+    var requestOptions = {
       url: `${apiOptions.server}${path}`,
       method: 'GET',
       json: {},
     };
     request(
       requestOptions, async (err, {statusCode}, user) => {
-        if (!user) {
-          return res.status(401).json({ message: 'Invalid credentials' });
+        console.log("this is retrived from the db",user);
+        if (user) {
+          return res.status(401).json({ message: "User Exists" });
+        }else{
+
+          path = `/api/user?email=${email}&password=${password}`;
+          requestOptions = {
+            url: `${apiOptions.server}${path}`,
+            method: 'POST',
+            json: {},
+          };
+          request(
+            requestOptions, async (err, {statusCode}, user) => {
+              if (user) {
+                return res.status(401).json({ message: 'User Created' });
+              }
+            }
+          );
         }
-        console.log("from controllers bcrypt",password,user.password);
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-          }
-          const token = jwt.sign({ username: user.username, userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
-          res.status(200).json({ token, userId: user._id });
-        }
+      }
     );
   } catch (error) {
     console.error(error);
