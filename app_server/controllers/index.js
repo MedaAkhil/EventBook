@@ -74,7 +74,8 @@ const ctrlSignUpPost = async (req,res) => {
       requestOptions, async (err, {statusCode}, user) => {
         console.log("this is retrived from the db",user);
         if (user) {
-          return res.redirect('/signup?msg=Email Already Registered');
+          const msg = 'Email Already Registered';
+          return res.render('SignUp',{msg});
         }else{
           path = `/api/user?email=${email}&password=${password}`;
           requestOptions = {
