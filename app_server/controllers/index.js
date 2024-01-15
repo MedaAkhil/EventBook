@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // login page controller functions
 const renderLoginPage = (req, res) => {
-    res.render('index');
+    res.render('SignIn');
 };
   
 const ctrlLogin = (req, res) => {
@@ -26,7 +26,8 @@ const ctrlLoginPost = async (req,res) => {
     const { email, password } = req.body;
 
     // Check if the username exists
-    const path = `/api/user/${email}`;
+    const path = `/api/user/${email} ${password}`;
+    console.log(` password from signin form${path}`);
     const requestOptions = {
         url: `${apiOptions.server}${path}`,
         method: 'GET',
@@ -35,11 +36,11 @@ const ctrlLoginPost = async (req,res) => {
     request(
         requestOptions, async (err, {statusCode}, user) => {
           if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: `Invalid credentials${user}` });
           }
           const passwordMatch = await bcrypt.compare(password, user.password);
           if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: `Invalid credentials${user}` });
           }
           const token = jwt.sign({ username: user.username, userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
           res.status(200).json({ token, userId: user._id });

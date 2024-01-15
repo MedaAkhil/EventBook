@@ -8,7 +8,7 @@ const ctrlInder = require('../controllers/index')
 var router = express.Router();
 
 
-router.route('/login').get(ctrlInder.ctrlLogin).post(ctrlInder.ctrlLoginPost);
+router.route('/signin').get(ctrlInder.ctrlLogin).post(ctrlInder.ctrlLoginPost);
 router.route('/signup').get(ctrlInder.ctrlSignUp).post(ctrlInder.ctrlSignUpPost);
 router.route('/').get(ctrlInder.homePage);
 
