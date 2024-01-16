@@ -6,16 +6,17 @@ html(lang="en")
     title Login Page
 
   body
-    .container
-      h2 Login Page
-      p(style="color: red;") #{msg}
-      form(id="loginForm", action="/signin", method="post")
-        label(for="email") Email:
-        input(type="text", id="email", name="email", required)
-        br
-        label(for="password") Password:
-        input(type="password", id="password", name="password", required)
-        br
-        input(type="submit", value="Login")
-        p dont have an account
-        a(href="/signup") SignUp
+    center
+      .container
+        h2 Login Page
+        p(style="color: red;") #{msg}
+        form(id="loginForm", action="/signin", method="post")
+          label(for="email") Email:
+          input(type="text", id="email", name="email", required)
+          br
+          label(for="password") Password:
+          input(type="password", id="password", name="password", required)
+          br
+          input(type="submit", value="Login")
+          p dont have an account
+          a(href="/signup") SignUp

@@ -30,6 +30,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'k34hjb53kjb3b54oj',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+    secure: false, // Set to true in a production environment if using HTTPS
+  },
+}));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

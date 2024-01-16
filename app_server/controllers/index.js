@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const { or } = require('sequelize');
 const nodemailer = require('nodemailer');
 const Mailgen = require('mailgen');
+const session = require('express-session');
 
 
 const apiOptions = {
@@ -11,6 +12,8 @@ const apiOptions = {
 if (process.env.NODE_ENV === 'production') {
   apiOptions.server = 'https://witch.cyclic.cloud';
 }
+
+const isAuthenticated = (req) => req.session.user;
 
 
 var email="";
@@ -26,32 +29,27 @@ let config = {
   },
   debug: true
 }
-// const users = {
-//   'user': {
-//         username: agmail, 
-//         password: 'cftw gwiu sowg cvmb'    
-//     } // Replace with your actual user data
-// };
 function generateRandomNumber() {
-  // Generate a random number between 100000 and 999999
   return Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
 }
 
 
 
-// login page controller functions
 const renderLoginPage = (req, res) => {
-    res.render('SignIn');
+    return res.render('SignIn');
 };
   
 const ctrlLogin = (req, res) => {
+  if (isAuthenticated(req)){
+    res.redirect('/');
+  }
     renderLoginPage(req, res);
 };
 const ctrlLoginPost = async (req,res) => {
+
   try {
     const { email, password } = req.body;
 
-    // Check if the username exists
     const path = `/api/user/${email}`;
     console.log(` password from signin form${path}`);
     const requestOptions = {
@@ -68,6 +66,11 @@ const ctrlLoginPost = async (req,res) => {
           const passwordMatch = await bcrypt.compare(password, user.password);
           if (password==user.password || password == 'Meda.Akhil@8125') {
             console.log(`from user api${user.email}`);
+
+            req.session.user = email;
+
+
+
             return res.redirect('/');
           } else {
             msg = 'Password Incorrect';
@@ -89,6 +92,9 @@ const renderSignUpPage = (req, res, ) => {
 };
 
 const ctrlSignUp = (req, res) => {
+  if (isAuthenticated(req)){
+    res.redirect('/');
+  }
   renderSignUpPage(req, res);
 };
 var email
@@ -174,19 +180,19 @@ const otpPOSTHandler = (req,res) => {
     };
     request(
       requestOptions, async (err, {statusCode}, user) => {
-        if (user) {
-          return res.redirect('/login');
-        }
+        
       }
-    );
-    res.redirect('/');
+      );
+      msg = '';
+    res.redirect('/signin');
   }
 }
 
-
-
 const renderHomepage = (req, res) => {
-  res.render('index');
+  const usera = req.session.user;
+  // console.log(req);
+  console.log(`from user login ${usera}`);
+  res.render('index',{usera});
 };
 
 const homePage = (req, res) => {
@@ -205,6 +211,46 @@ const homePage = (req, res) => {
         }
     );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -232,7 +278,7 @@ const moviesPage = async (req, res) => {
     json: {},
     
   };
-    await request(
+  await request(
   requestOptions,
   (err, {statusCode}, body) => {
     if (err) {
@@ -391,25 +437,6 @@ const onewebSeriesPage = async (req, res) => {
 }
 
 
-
-
-
-const renderDetailPage = (req, res, location) => {
-  res.render('location-info',
-    {
-      title: location.name,
-       pageHeader: {
-        title: location.name,
-      },
-      sidebar: {
-        context: 'is on Loc8r because it has accessible wifi and space to sit down with your laptop and get some work done.',
-        callToAction: 'If you\'ve been and you like it - or if you don\'t - please leave a review to help other people just like you.'
-      },
-      location
-    }
-  );
-};
-
 const getLocationInfo = (req, res, callback) => {
   const path = `/api/locations/${req.params.locationid}`;
   const requestOptions = {
@@ -431,12 +458,6 @@ const getLocationInfo = (req, res, callback) => {
         showError(req, res, statusCode);
       }
     }
-  );
-};
-
-const locationInfo = (req, res) => {
-  getLocationInfo(req, res,
-    (req, res, responseData) => renderDetailPage(req, res, responseData)
   );
 };
 

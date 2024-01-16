@@ -8,7 +8,7 @@ html(lang="en")
 
   body
     center
-        .container
+      .container
         h2 SignUp
         p(style="color: red;") #{msg}
         form(action="/signup", method="POST")
@@ -22,4 +22,3 @@ html(lang="en")
             input(type="password", id="password", name="password", required)
             br
             input(type="submit", value="SignUp")
-  
