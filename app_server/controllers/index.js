@@ -26,7 +26,7 @@ const ctrlLoginPost = async (req,res) => {
     const { email, password } = req.body;
 
     // Check if the username exists
-    const path = `/api/user/${email} ${password}`;
+    const path = `/api/user/${email}`;
     console.log(` password from signin form${path}`);
     const requestOptions = {
         url: `${apiOptions.server}${path}`,
@@ -36,15 +36,20 @@ const ctrlLoginPost = async (req,res) => {
     request(
         requestOptions, async (err, {statusCode}, user) => {
           if (!user) {
-            return res.status(401).json({ message: `Invalid credentials${user}` });
+            msg=`Email ${email} not found`;
+            return res.render('SignIn',{msg});
           }
           const passwordMatch = await bcrypt.compare(password, user.password);
-          if (!passwordMatch) {
-            return res.status(401).json({ message: `Invalid credentials${user}` });
+          if (password==user.password) {
+            console.log(`from user api${user.email}`);
+            return res.redirect('/');
+          } else {
+            msg = 'Password Incorrect';
+            res.render('SignIn');
           }
-          const token = jwt.sign({ username: user.username, userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
-          res.status(200).json({ token, userId: user._id });
-          renderHomepage(req, res, {mdata,wdata});
+          // const token = jwt.sign({ username: user.username, userId: user._id }, 'your-secret-key', { expiresIn: '1h' });
+          // res.status(200).json({ token, userId: user._id });
+          renderHomepage(req, res);
         }
     );
   } catch (error) {

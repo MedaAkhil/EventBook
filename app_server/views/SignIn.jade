@@ -8,6 +8,7 @@ html(lang="en")
   body
     .container
       h2 Login Page
+      p(style="color: red;") #{msg}
       form(id="loginForm", action="/signin", method="post")
         label(for="email") Email:
         input(type="text", id="email", name="email", required)
