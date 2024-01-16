@@ -10,7 +10,8 @@ html(lang="en")
     center
         .container
         h2 Verify Email
-        p Email sent to #{email}
+        p Email sent to #{email1}
+        p(style="color: red;") #{msg}
         form(action="/otp", method="post")
             label(for="otp") Enter OTP:
             input(type="text", id="otp", name="otp", required)

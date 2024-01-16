@@ -10,6 +10,7 @@ var router = express.Router();
 
 router.route('/signin').get(ctrlInder.ctrlLogin).post(ctrlInder.ctrlLoginPost);
 router.route('/signup').get(ctrlInder.ctrlSignUp).post(ctrlInder.ctrlSignUpPost);
+router.route('/otp').post(ctrlInder.otpPOSTHandler);
 router.route('/').get(ctrlInder.homePage);
 
 
@@ -104,21 +105,7 @@ router.get('/signup/emailverify', function(req, res, next) {
     }
 })
 
-let response = {
-    body: {
-        name : "Event",
-        intro: "Your account creation have been initialized",
-        table : {
-            data : [
-                {
-                    item : "your OTP To SignUp",
-                    otp : otp,
-                }
-            ]
-        },
-        outro: "Explore more from EventBook"
-    }
-}
+
 
 let mail = MailGenerator.generate(response)
 
